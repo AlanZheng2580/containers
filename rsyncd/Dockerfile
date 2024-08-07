@@ -10,6 +10,7 @@ COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod 644 /etc/rsyncd.conf
 RUN chmod 755 /docker-entrypoint.sh
 RUN mkdir -p /share && chmod 777 /share
+RUN sed -i 's/#Port 22/Port 873/' /etc/ssh/sshd_config
 
 # https://askubuntu.com/a/919732
 RUN adduser -D rsyncd && setcap cap_net_bind_service,cap_setgid=+ep /usr/bin/rsync
