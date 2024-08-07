@@ -7,4 +7,6 @@ else
     echo "rsyncd:$RSYNCD_PASSWORD" > /home/rsyncd/rsyncd.secrets
 fi
 
-exec "$@"
+cat /home/rsyncd/rsyncd.secrets | sudo chpasswd
+sudo chown rsyncd:rsyncd /home/rsyncd/.ssh/authorized_keys
+sudo /usr/sbin/sshd -D
