@@ -5,10 +5,10 @@ build:
 	docker build -t cyching/rsyncd:$(VERSION) .
 
 test:
-	docker run -d --name=rsyncd -p 2222:22 \
-	-v ./authorized_keys:/home/rsyncd/.ssh/authorized_keys \
-	-v ./ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key \
-	-v ./ssh_host_rsa_key.pub:/etc/ssh/ssh_host_rsa_key.pub cyching/rsyncd:$(VERSION)
+	docker run -d --name=rsyncd -p 8873:873 \
+	-v ./authorized_keys:/home/rsyncd/.ssh/authorized_keys.ori \
+	-v ./ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key.ori \
+	-v ./ssh_host_rsa_key.pub:/etc/ssh/ssh_host_rsa_key.pub.ori cyching/rsyncd:$(VERSION)
 	sleep 3
-	rsync -e 'ssh -p 2222 -i ./client_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' ./Dockerfile rsyncd@localhost:/share/testing/ && echo success!
+	rsync -e 'ssh -p 8873 -i ./client_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' ./Dockerfile rsyncd@localhost:/share/testing/ && echo success!
 	docker stop rsyncd && docker rm rsyncd
