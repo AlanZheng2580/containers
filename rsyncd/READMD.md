@@ -27,3 +27,9 @@ make build
 ```sh
 make test
 ```
+
+### 產生給azure ci pipeline讀取的client_key
+
+因為azure ci pipeline的變數是字串，儲存時的換行會變成空格，所以先把client_key用base64編碼
+cat client_key | base64 > client_key.base64，再把內容貼到pipeline變數
+pipeline內再用cat $(cleintKeyBase64) | tr ' ' '\n' | base64 -d > ./client_key 解開
