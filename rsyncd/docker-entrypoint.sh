@@ -31,4 +31,4 @@ ls -alh /home/rsyncd/.ssh/
 echo "=== ls -alh /etc/ssh/ ==="
 ls -alh /etc/ssh/
 
-sudo /usr/sbin/sshd -D
+sudo /usr/sbin/sshd -D -e
