@@ -11,9 +11,11 @@ Generate a new SSH key pair for the client & server
 
 ```sh
 cd {PATH}/rsync
-ssh-keygen -t rsa -b 4096 -f ./client_key
+ssh-keygen -t rsa -b 2048 -f ./client_key
+# remove the account information at the end of the content of public key file
 cp ./client_key.pub ./authorized_keys
-ssh-keygen -t rsa -b 4096 -f ./ssh_host_rsa_key
+ssh-keygen -t rsa -b 2048 -f ./ssh_host_rsa_key
+# remove the account information at the end of the content of public key file
 ```
 
 ## 2. Build the docker image

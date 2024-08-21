@@ -5,7 +5,7 @@ build:
 	docker build -t cyching/rsyncd:$(VERSION) .
 
 test:
-	docker run -d --name=rsyncd -p 8873:873 \
+	docker run -d --name=rsyncd -p 8873:8873 \
 	-v ./authorized_keys:/home/rsyncd/.ssh/authorized_keys.ori \
 	-v ./ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key.ori \
 	-v ./ssh_host_rsa_key.pub:/etc/ssh/ssh_host_rsa_key.pub.ori cyching/rsyncd:$(VERSION)
