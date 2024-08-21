@@ -1,6 +1,5 @@
 VERSION := $(shell git rev-parse --short=8 HEAD)-$(shell date +%Y%m%d)
 
-
 build:
 	docker build -t cyching/rsyncd:$(VERSION) .
 
