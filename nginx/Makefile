@@ -3,6 +3,7 @@ VERSION := $(shell date +%Y%m%d)-$(shell git rev-parse --short=8 HEAD)
 
 build:
 	docker build -t cyching/nginx:$(VERSION) .
+	docker tag cyching/nginx:$(VERSION) cyching/nginx:latest
 
 test:
 	docker-compose up -d
