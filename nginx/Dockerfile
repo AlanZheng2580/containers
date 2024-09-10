@@ -31,6 +31,8 @@ COPY --from=builder /opt/bitnami/nginx/modules/ngx_http_cache_purge_module.so /o
 ## Enable module
 RUN echo "load_module modules/ngx_http_cache_purge_module.so;" | cat - /opt/bitnami/nginx/conf/nginx.conf > /tmp/nginx.conf && \
     cp /tmp/nginx.conf /opt/bitnami/nginx/conf/nginx.conf
+## Set the resolver.conf
+RUN sed -i '/exec "${NGINX_SBIN_DIR}\/nginx"/i echo resolver $(awk '"'"'BEGIN{ORS=" "} $1=="nameserver" {print $2}'"'"' /etc/resolv.conf)" ipv6=off valid=30s;" > /opt/bitnami/nginx/conf/resolver.conf' /opt/bitnami/scripts/nginx/run.sh
 ## Set the container to be run as a non-root user by default
 USER 1001
 ENTRYPOINT [ "/opt/bitnami/scripts/nginx/entrypoint.sh" ]
