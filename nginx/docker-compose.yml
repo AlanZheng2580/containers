@@ -2,7 +2,7 @@ version: '2'
 
 services:
   nginx:
-    image: cyching/nginx:20240828-0c991e46
+    image: cyching/nginx:latest
     ports:
       - '8080:8080'
     volumes:
