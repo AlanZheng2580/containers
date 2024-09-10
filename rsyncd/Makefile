@@ -1,8 +1,13 @@
 VERSION := $(shell git rev-parse --short=8 HEAD)-$(shell date +%Y%m%d)
 
+key:
+	ssh-keygen -t rsa -b 4096 -f ./client_key
+	cp ./client_key.pub ./authorized_keys
+	ssh-keygen -t rsa -b 4096 -f ./ssh_host_rsa_key
 
 build:
 	docker build -t cyching/rsyncd:$(VERSION) .
+	sudo apt update && sudo apt -y install rsync
 
 test:
 	docker run -d --name=rsyncd -p 8873:873 \
