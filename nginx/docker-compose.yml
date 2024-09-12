@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  nginx:
+    image: cyching/nginx:latest
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./nginx.conf:/opt/bitnami/nginx/conf/nginx.conf
+  httpbin:
+    image: kennethreitz/httpbin
+    ports:
+      - '80:80'
