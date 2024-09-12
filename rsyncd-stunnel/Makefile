@@ -4,6 +4,8 @@ build:
 	docker build -t cyching/rsyncd-stunnel:$(VERSION) .
 
 test:
+	command -v stunnel
+	command -v rsync
 	docker run --name=rsyncd -d -e RSYNCD_PASSWORD=hello123 -p 8873:8873 cyching/rsyncd-stunnel:$(VERSION)
 	sleep 3
 	echo hello123 > /tmp/password
