@@ -20,6 +20,7 @@ USER rsyncd
 
 WORKDIR /share
 COPY --chown=rsyncd rsyncd.secrets /home/rsyncd/
+RUN chmod 600 /home/rsyncd/rsyncd.secrets
 
 EXPOSE 873
 
