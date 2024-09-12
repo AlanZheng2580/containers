@@ -31,4 +31,4 @@ COPY --chown=rsyncd stunnel.server.conf /home/rsyncd/
 EXPOSE 8873
 
 ENTRYPOINT [ "/docker-entrypoint.sh"]
-CMD ["rsync", "--daemon", "--no-detach", "--log-file", "/dev/stdout", "&&", "stunnel", "/home/rsyncd/stunnel.server.conf"]
+CMD ["rsync", "--daemon", "--no-detach", "--log-file", "/dev/stdout"]
