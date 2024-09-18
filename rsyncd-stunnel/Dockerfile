@@ -1,7 +1,7 @@
 FROM alpine:3.18.3
 
 RUN set -xe \
-    && apk add -U rsync libcap openssl stunnel sudo \
+    && apk add -U rsync libcap openssl stunnel sudo curl \
     && rm -rf /var/cache/apk/*
 
 COPY rsyncd.conf /etc/rsyncd.conf
