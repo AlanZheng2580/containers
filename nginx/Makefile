@@ -5,6 +5,9 @@ build:
 	docker build -t cyching/nginx:$(VERSION) .
 	docker tag cyching/nginx:$(VERSION) cyching/nginx:latest
 
+checker:
+	docker build --build-arg TAG=$(VERSION) -t cyching/nginx-checker:$(VERSION) -f Dockerfile-checker .
+
 test:
 	docker-compose up -d
 	sleep 3
