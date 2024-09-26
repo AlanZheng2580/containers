@@ -8,7 +8,7 @@ build:
 	docker build --build-arg NGINX_VERSION=$(NGINX_VERSION) --build-arg BITNAMI_NGINX_REVISION=$(BITNAMI_NGINX_REVISION) --build-arg BITNAMI_NGINX_TAG=$(BITNAMI_NGINX_TAG) -t cyching/nginx:$(TAG) .
 	docker tag cyching/nginx:$(TAG) cyching/nginx:latest
 
-checker:
+checker: build
 	docker build --build-arg TAG=$(TAG) -t cyching/nginx-checker:$(TAG) -f Dockerfile-checker .
 
 test:
