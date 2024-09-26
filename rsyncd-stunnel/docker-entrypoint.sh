@@ -7,4 +7,6 @@ else
     echo "rsyncd:$RSYNCD_PASSWORD" > /home/rsyncd/rsyncd.secrets
 fi
 
+stunnel /home/rsyncd/stunnel.server.conf
+
 exec "$@"
