@@ -1,0 +1,8 @@
+ARG TAG=20240830-e8686837-1.25.1-debian-11-r41
+FROM cyching/nginx:${TAG} 
+USER root
+COPY --from=alpine/helm:3.13.3 /usr/bin/helm /usr/local/bin/
+COPY --from=mikefarah/yq:4.40.5 /usr/bin/yq /usr/local/bin/
+COPY --from=howard76/jq:v2 /opt/jq /usr/local/bin/
+RUN apt update && apt -y install sudo
+ENTRYPOINT []
