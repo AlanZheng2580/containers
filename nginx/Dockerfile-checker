@@ -1,4 +1,4 @@
-ARG TAG=20240830-e8686837-1.25.1-debian-11-r41
+ARG TAG=20240830-e8686837-1.25.5-debian-12-r7
 FROM cyching/nginx:${TAG} 
 USER root
 COPY --from=alpine/helm:3.13.3 /usr/bin/helm /usr/local/bin/
