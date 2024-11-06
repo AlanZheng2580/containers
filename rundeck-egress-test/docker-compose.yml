@@ -1,7 +1,8 @@
 version: '3'
 services:
   rundeck:
-    image: cyching/rundeck-egress-test:latest
+    # image: cyching/rundeck-egress-test:latest
+    image: rophy/rundeck:4.17.4-20240324-r2
     command: "-Dhttp.proxySet=true -Dhttp.proxyHost=proxysrv -Dhttp.proxyPort=80 -Dhttps.proxySet=true -Dhttps.proxySet=true -Dhttps.proxyHost=proxysrv -Dhttps.proxyPort=80 -Dhttp.nonProxyHosts=proxysrv"
     ports:
     - 4440:4440
