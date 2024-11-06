@@ -1,0 +1,39 @@
+version: '3'
+services:
+  rundeck:
+    image: cyching/rundeck-egress-test:latest
+    command: "-Dhttp.proxySet=true -Dhttp.proxyHost=proxysrv -Dhttp.proxyPort=80 -Dhttps.proxySet=true -Dhttps.proxySet=true -Dhttps.proxyHost=proxysrv -Dhttps.proxyPort=80 -Dhttp.nonProxyHosts=proxysrv"
+    ports:
+    - 4440:4440
+    environment:
+      RUNDECK_GRAILS_URL: http://localhost:80
+      RUNDECK_SERVER_FORWARDED: "true"
+    networks:
+    - int
+
+  proxysrv: 
+    image: reiz/nginx_proxy:0.0.3
+    volumes:
+    - ./conf/proxysrv.conf:/usr/local/nginx/conf/nginx.conf
+    ports:
+    - 80:80
+    networks:
+    - ext
+    - int
+
+  # nginx:
+  #   image: bitnami/nginx:1.25.5
+  #   volumes:
+  #   - ./conf/nginx_site.conf:/opt/bitnami/nginx/conf/server_blocks/nginx_site.conf:ro
+  #   ports:
+  #   - 80:80
+  #   networks:
+  #   - ext
+  #   - int
+
+networks:
+  int:
+    internal: true
+
+  ext:
+    external: true
