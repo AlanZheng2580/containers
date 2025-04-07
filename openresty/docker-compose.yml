@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  nginx:
+    image: cyching/openresty:latest
+    ports:
+      - '8088:8088'
+    volumes:
+      - ./nginx.conf:/opt/bitnami/openresty/nginx/conf/nginx.conf
+  httpbin:
+    image: kennethreitz/httpbin
+    ports:
+      - '80:80'
