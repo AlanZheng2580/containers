@@ -1,5 +1,5 @@
-ARG NGINX_VERSION=1.25.5
-ARG BITNAMI_NGINX_REVISION=r7
+ARG NGINX_VERSION=1.27.1
+ARG BITNAMI_NGINX_REVISION=r5
 ARG BITNAMI_NGINX_TAG=${NGINX_VERSION}-debian-12-${BITNAMI_NGINX_REVISION}
 
 FROM bitnami/nginx:${BITNAMI_NGINX_TAG} AS builder
@@ -18,7 +18,7 @@ RUN cd /tmp && \
     tar xzf nginx-${NGINX_VERSION}.tar.gz
 ## Compile NGINX with desired module
 RUN apt update && apt -y install git && cd /tmp && \
-    git clone https://github.com/nginx-modules/ngx_cache_purge.git
+    git clone --branch 2.5.3 https://github.com/nginx-modules/ngx_cache_purge.git
 RUN cd /tmp/nginx-${NGINX_VERSION} && \
     rm -rf /opt/bitnami/nginx && \
     ./configure --prefix=/opt/bitnami/nginx --with-compat --add-dynamic-module=/tmp/ngx_cache_purge && \
