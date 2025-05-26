@@ -42,6 +42,9 @@ COPY --from=builder /opt/bitnami/openresty/bin/openresty /opt/bitnami/openresty/
 ## Enable module
 RUN echo "load_module modules/ngx_http_cache_purge_module.so;" | cat - /opt/bitnami/openresty/nginx/conf/nginx.conf > /tmp/nginx.conf && \
     cp /tmp/nginx.conf /opt/bitnami/openresty/nginx/conf/nginx.conf
+RUN apt-get update && apt-get install -y curl unzip git iputils-ping \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN opm get ledgetech/lua-resty-http
 ## Set the resolver.conf
 RUN sed -i '/exec "$@"/i echo resolver $(awk '"'"'BEGIN{ORS=" "} $1=="nameserver" {print $2}'"'"' /etc/resolv.conf)" ipv6=off valid=30s;" > /opt/bitnami/openresty/nginx/conf/resolver.conf' /opt/bitnami/scripts/openresty/entrypoint.sh
 ## Set the container to be run as a non-root user by default
