@@ -8,12 +8,15 @@ build:
 
 test:
 	sleep 3
-	curl -I localhost:8088/get
-	curl -I localhost:8088/get
-	curl -I localhost:8088/purge/get
-	curl -I localhost:8088/get
-	curl -I -X PURGE localhost:8088/
-	curl -I localhost:8088/get
+	curl -Is localhost:8088/get | grep -i "X-Cache-Status:"
+	curl -Is localhost:8088/get | grep -i "X-Cache-Status: HIT"
+	curl -Is localhost:8088/purge/get | grep -i "HTTP/1.1 200 OK"
+	curl -Is localhost:8088/get | grep -i "X-Cache-Status: MISS"
+	curl -Is localhost:8088/get | grep -i "X-Cache-Status: HIT"
+	curl -Is -X PURGE localhost:8088/ | grep -i "HTTP/1.1 200 OK"
+	curl -Is localhost:8088/get | grep -i "X-Cache-Status: MISS"
+	curl -Is localhost:8088/get | grep -i "X-Cache-Status: HIT"
+	curl -s localhost:8088/status | grep -i "<title>nginx vhost traffic status monitor</title>"
 
 up:
 	docker-compose up -d
