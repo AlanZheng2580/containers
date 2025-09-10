@@ -1,5 +1,5 @@
 VERSION := $(shell date +%Y%m%d)-$(shell git rev-parse --short=8 HEAD)
-BITNAMI_OPENRESTY_TAG := 1.27.1-1-debian-12-r5
+BITNAMI_OPENRESTY_TAG := 1.27.1-2-debian-12-r15
 TAG := $(VERSION)-$(BITNAMI_OPENRESTY_TAG)
 
 build:
