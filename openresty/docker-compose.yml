@@ -1,7 +1,7 @@
-version: '2'
+version: '3.3'
 
 services:
-  nginx:
+  openresty:
     image: cyching/openresty:latest
     ports:
       - '8088:8088'
