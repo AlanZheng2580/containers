@@ -44,8 +44,6 @@ metrics:
 # cd openresty-1.27.1.2
 # ./configure --with-debug --prefix=/home/kasm-user/workspace/containers/openresty/output --with-pcre-jit --with-http_realip_module --with-http_ssl_module --with-http_stub_status_module --with-http_v2_module --with-http_gzip_static_module --with-http_gunzip_module --with-http_auth_request_module --with-http_sub_module --with-mail_ssl_module --with-mail --with-compat --with-file-aio --with-http_addition_module --with-http_dav_module --with-http_flv_module --with-http_geoip_module=dynamic --with-http_image_filter_module=dynamic --with-http_mp4_module --with-http_random_index_module --with-http_secure_link_module --with-http_slice_module --with-http_xslt_module=dynamic --with-ipv6 --with-md5-asm --with-sha1-asm --with-stream_realip_module --with-threads --with-stream --add-dynamic-module=../ngx_cache_purge --add-module=../nginx-module-vts && make -j$(nproc) && make install
 
-# set "daemon off;" in nginx/conf/nginx.conf
-
 # cp openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c.orig
 # vim openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c
 # diff -u openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c.orig openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c > ../mask-Signature.patch 
