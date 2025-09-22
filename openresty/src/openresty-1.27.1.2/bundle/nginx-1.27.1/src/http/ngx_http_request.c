@@ -1101,6 +1101,68 @@ failed:
 
 #endif
 
+/* --- helper: sanitize sensitive params in request_line --- */
+static void
+ngx_http_sanitize_request_line(ngx_http_request_t *r, ngx_connection_t *c)
+{
+    /* Define the key string only once */
+    static const char   signature_key[] = "Signature=";
+    static const size_t signature_key_len = sizeof(signature_key) - 1;
+
+    /*
+     * ngx_strcasestrn(haystack, needle, n):
+     *   - Performs a case-insensitive substring search.
+     *   - The third argument (n) should be the length of `needle` minus 1.
+     *     Here: signature_key_len - 1.
+     */
+    u_char *start = ngx_strcasestrn(r->request_line.data,
+                                    signature_key,
+                                    signature_key_len - 1);
+
+    if (start && start < (r->request_line.data + r->request_line.len)) {
+
+        /*
+         * ngx_strlchr(p, last, c):
+         *   - Searches for character `c` in the range [p, last).
+         *   - `p`   = start position
+         *   - `last`= end position (exclusive, not included in search).
+         *
+         * Search for '&' after "signature=".
+         */
+        u_char *end = ngx_strlchr(start + signature_key_len,
+                                  r->request_line.data + r->request_line.len,
+                                  '&');
+        if (end == NULL) {
+            end = r->request_line.data + r->request_line.len; /* fallback: end of line */
+        }
+
+        /*
+         * Also search for space ' ' — if it occurs before '&',
+         * treat it as the actual end of the value.
+         */
+        u_char *spc = ngx_strlchr(start + signature_key_len,
+                                  r->request_line.data + r->request_line.len,
+                                  ' ');
+        if (spc && spc < end) {
+            end = spc;
+        }
+
+        if (end > start + signature_key_len) {
+            size_t vlen = end - (start + signature_key_len);
+
+            /*
+             * Sanitize in-place by overwriting with 'x'.
+             * This prevents leaking sensitive values into logs.
+             */
+            ngx_memset(start + signature_key_len, 'x', vlen);
+        }
+    }
+
+    /* Debug log showing sanitized request line */
+    ngx_log_debug1(NGX_LOG_DEBUG_HTTP, c->log, 0,
+                   "sanitize applied, request_line after: \"%V\"",
+                   &r->request_line);
+}
 
 static void
 ngx_http_process_request_line(ngx_event_t *rev)
@@ -1215,6 +1277,9 @@ ngx_http_process_request_line(ngx_event_t *rev)
 
             c->log->action = "reading client request headers";
 
+            /* sanitize */
+            ngx_http_sanitize_request_line(r, c);
+
             rev->handler = ngx_http_process_request_headers;
             ngx_http_process_request_headers(rev);
 
@@ -1252,6 +1317,9 @@ ngx_http_process_request_line(ngx_event_t *rev)
             if (rv == NGX_DECLINED) {
                 r->request_line.len = r->header_in->end - r->request_start;
                 r->request_line.data = r->request_start;
+
+                /* sanitize */
+                ngx_http_sanitize_request_line(r, c);
 
                 ngx_log_error(NGX_LOG_INFO, c->log, 0,
                               "client sent too long URI");
