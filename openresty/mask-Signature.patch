@@ -1,0 +1,68 @@
+--- openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c.orig	2025-09-22 17:36:12.072476994 +0800
++++ openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c	2025-09-22 17:36:33.448444978 +0800
+@@ -3929,7 +3929,64 @@
+     }
+ 
+     if (r->request_line.len) {
+-        p = ngx_snprintf(buf, len, ", request: \"%V\"", &r->request_line);
++        /* START */
++        static const char   signature_key[] = "Signature=";
++        static const size_t signature_key_len = sizeof(signature_key) - 1;
++        u_char *q = ngx_strcasestrn(r->request_line.data,
++                                    signature_key,
++                                    signature_key_len - 1);
++        if (q && q < (r->request_line.data + r->request_line.len)) {
++            u_char *sanitized_buf = ngx_pnalloc(r->pool, r->request_line.len);
++            if (sanitized_buf) {
++                ngx_memcpy(sanitized_buf, r->request_line.data, r->request_line.len);
++
++                ngx_str_t sanitized;
++                sanitized.data = sanitized_buf;
++                sanitized.len  = r->request_line.len;
++
++                size_t offset = q - r->request_line.data;
++                u_char *q2 = sanitized_buf + offset;
++
++                /*
++                * ngx_strlchr(p, last, c):
++                *   - Searches for character `c` in the range [p, last).
++                *   - `p`   = start position
++                *   - `last`= end position (exclusive, not included in search).
++                *
++                * Search for '&' after "signature=".
++                */
++                u_char *end = ngx_strlchr(q2,
++                                        sanitized_buf + r->request_line.len - offset,
++                                        '&');
++                if (end == NULL) {
++                    end = sanitized_buf + r->request_line.len; /* fallback: end of line */
++                }
++
++                /*
++                * Also search for space ' ' — if it occurs before '&',
++                * treat it as the actual end of the value.
++                */
++                u_char *spc = ngx_strlchr(q2,
++                                        sanitized_buf + r->request_line.len - offset,
++                                        ' ');
++                if (spc && spc < end) {
++                    end = spc;
++                }
++
++                size_t vlen = end - (q2 + signature_key_len);
++                if (vlen > 0) {
++                    /*
++                    * Sanitize in-place by overwriting with 'x'.
++                    * This prevents leaking sensitive values into logs.
++                    */
++                    ngx_memset(q2 + signature_key_len, 'x', vlen);
++                }
++                p = ngx_snprintf(buf, len, ", request: \"%V\"", &sanitized);
++            }
++        } else {
++            p = ngx_snprintf(buf, len, ", request: \"%V\"", &r->request_line);
++        }
++        /* END */
+         len -= p - buf;
+         buf = p;
+     }
