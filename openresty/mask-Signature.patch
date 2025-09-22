@@ -1,0 +1,33 @@
+--- openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c.orig	2025-09-18 18:09:36.592760351 +0800
++++ openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c	2025-09-18 19:09:04.845218777 +0800
+@@ -1255,6 +1255,30 @@
+ 
+                 ngx_log_error(NGX_LOG_INFO, c->log, 0,
+                               "client sent too long URI");
++
++                ngx_log_error(NGX_LOG_INFO, c->log, 0, "test 1");
++                u_char *q = ngx_strnstr(r->request_line.data, "Signature=", r->request_line.len);
++                if (q) {
++                    ngx_log_error(NGX_LOG_INFO, c->log, 0, "test 2");
++                    u_char *end = ngx_strlchr(q, r->request_line.data + r->request_line.len, '&');
++                    if (end == NULL) {
++                        end = r->request_line.data + r->request_line.len;
++                    }
++                    ngx_log_error(NGX_LOG_INFO, c->log, 0, "test 3");
++
++                    // signature= 的值長度
++                    size_t vlen = end - (q + 10);  // "signature=" 長度 = 10
++                    ngx_log_error(NGX_LOG_INFO, c->log, 0, "test 4");
++                    if (vlen > 0) {
++                        // 用 *** 覆蓋敏感值
++                        ngx_memcpy(q + 10, "***", 3);
++                        if (vlen > 3) {
++                            ngx_memset(q + 13, 'x', vlen - 3); // 保持長度一致，避免 log 出現殘值
++                        }
++                    }
++                    ngx_log_error(NGX_LOG_INFO, c->log, 0, "test 5");
++                }
++
+                 ngx_http_finalize_request(r, NGX_HTTP_REQUEST_URI_TOO_LARGE);
+                 break;
+             }

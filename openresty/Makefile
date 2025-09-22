@@ -32,3 +32,12 @@ logs: ## 查看 OpenResty 的 logs
 
 metrics:
 	curl -v localhost:8088/metrics
+
+# cd openresty
+# mkdir src
+# cd src
+# curl -O https://openresty.org/download/openresty-1.27.1.2.tar.gz 
+# tar -zxvf ./openresty-1.27.1.2.tar.gz 
+# cp openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c.orig
+# vim openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c
+# diff -u openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c.orig openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c > ../mask-Signature.patch 
