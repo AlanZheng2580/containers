@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "(gdb) Launch Openresty",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/home/kasm-user/workspace/containers/openresty/output/nginx/sbin/nginx",
+        "stopAtEntry": true,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }, {
+              "description": "Follow fork to worker",
+              "text": "set follow-fork-mode child",
+              "ignoreFailures": true
+            }
+        ]
+      }
+    ]
+  }
