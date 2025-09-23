@@ -1,6 +1,8 @@
---- openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c.orig	2025-09-22 17:36:12.072476994 +0800
-+++ openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c	2025-09-22 17:36:33.448444978 +0800
-@@ -3929,7 +3929,64 @@
+diff --git a/openresty/src/openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c b/openresty/src/openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c
+index 9593b7f..0f31048 100644
+--- a/openresty/src/openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c
++++ b/openresty/src/openresty-1.27.1.2/bundle/nginx-1.27.1/src/http/ngx_http_request.c
+@@ -3929,7 +3929,64 @@ ngx_http_log_error_handler(ngx_http_request_t *r, ngx_http_request_t *sr,
      }
  
      if (r->request_line.len) {
@@ -32,7 +34,7 @@
 +                * Search for '&' after "signature=".
 +                */
 +                u_char *end = ngx_strlchr(q2,
-+                                        sanitized_buf + r->request_line.len - offset,
++                                        sanitized_buf + r->request_line.len,
 +                                        '&');
 +                if (end == NULL) {
 +                    end = sanitized_buf + r->request_line.len; /* fallback: end of line */
@@ -43,7 +45,7 @@
 +                * treat it as the actual end of the value.
 +                */
 +                u_char *spc = ngx_strlchr(q2,
-+                                        sanitized_buf + r->request_line.len - offset,
++                                        sanitized_buf + r->request_line.len,
 +                                        ' ');
 +                if (spc && spc < end) {
 +                    end = spc;
