@@ -3956,7 +3956,7 @@ ngx_http_log_error_handler(ngx_http_request_t *r, ngx_http_request_t *sr,
                 * Search for '&' after "signature=".
                 */
                 u_char *end = ngx_strlchr(q2,
-                                        sanitized_buf + r->request_line.len - offset,
+                                        sanitized_buf + r->request_line.len,
                                         '&');
                 if (end == NULL) {
                     end = sanitized_buf + r->request_line.len; /* fallback: end of line */
@@ -3967,7 +3967,7 @@ ngx_http_log_error_handler(ngx_http_request_t *r, ngx_http_request_t *sr,
                 * treat it as the actual end of the value.
                 */
                 u_char *spc = ngx_strlchr(q2,
-                                        sanitized_buf + r->request_line.len - offset,
+                                        sanitized_buf + r->request_line.len,
                                         ' ');
                 if (spc && spc < end) {
                     end = spc;
