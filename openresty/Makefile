@@ -19,13 +19,16 @@ test:
 	curl -s localhost:8088/status | grep -i "<title>nginx vhost traffic status monitor</title>"
 
 up:
-	docker-compose up -d --build --remove-orphans
+	docker-compose up --build --remove-orphans
 
 down:
 	docker-compose down -v
 
 reload:
 	docker-compose exec openresty openresty -s reload
+
+logs: ## 查看 OpenResty 的 logs
+	docker-compose logs -f openresty
 
 metrics:
 	curl -v localhost:8088/metrics
