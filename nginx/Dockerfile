@@ -20,10 +20,13 @@ RUN cd /tmp && \
     tar xzf nginx-${NGINX_VERSION}.tar.gz
 ## Compile NGINX with desired module
 RUN apt update && apt -y install git && cd /tmp && \
-    git clone --branch 2.5.3 https://github.com/nginx-modules/ngx_cache_purge.git
+    git clone --branch 2.5.3 https://github.com/nginx-modules/ngx_cache_purge.git && \
+    git clone --branch v0.0.7 https://github.com/chobits/ngx_http_proxy_connect_module.git
 RUN cd /tmp/nginx-${NGINX_VERSION} && \
+    patch -p1 < /tmp/ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch && \
     rm -rf /opt/bitnami/nginx && \
-    ./configure --prefix=/opt/bitnami/nginx --with-compat --add-dynamic-module=/tmp/ngx_cache_purge && \
+    ./configure --prefix=/opt/bitnami/nginx --with-compat --add-dynamic-module=/tmp/ngx_cache_purge \
+    --add-module=../ngx_http_proxy_connect_module && \
     make && \
     make install
 
