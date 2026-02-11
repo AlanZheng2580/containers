@@ -2,7 +2,9 @@ ARG NGINX_VERSION=1.27.1
 ARG BITNAMI_NGINX_REVISION=r5
 ARG BITNAMI_NGINX_TAG=${NGINX_VERSION}-debian-12-${BITNAMI_NGINX_REVISION}
 
-FROM bitnami/nginx:${BITNAMI_NGINX_TAG} AS builder
+# FROM bitnami/nginx:${BITNAMI_NGINX_TAG} AS builder
+# COPY from bitnamilegacy/nginx:1.27.1-debian-12-r5
+FROM cyching/nginx-bitnami:${BITNAMI_NGINX_TAG} AS builder
 USER root
 ## Redeclare NGINX_VERSION so it can be used as a parameter inside this build stage
 ARG NGINX_VERSION
@@ -25,7 +27,8 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
     make && \
     make install
 
-FROM bitnami/nginx:${BITNAMI_NGINX_TAG}
+# FROM bitnami/nginx:${BITNAMI_NGINX_TAG}
+FROM cyching/nginx-bitnami:${BITNAMI_NGINX_TAG}
 USER root
 COPY --from=builder /opt/bitnami/nginx/modules/ngx_http_cache_purge_module.so /opt/bitnami/nginx/modules/ngx_http_cache_purge_module.so
 ## Enable module
