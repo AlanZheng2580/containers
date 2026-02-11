@@ -1,4 +1,6 @@
-FROM bitnami/openresty:1.27.1-2-debian-12-r15 as builder
+# FROM bitnami/openresty:1.27.1-2-debian-12-r15 as builder
+# Mirror of bitnami/openresty:1.27.1-2-debian-12-r15 (Bitnami version is deprecated)
+FROM cyching/openresty-bitnami:1.27.1-2-debian-12-r15 as builder
 USER root
 
 ## Install required packages and build dependencies
@@ -35,7 +37,8 @@ RUN cd /tmp/openresty-1.27.1.2 && \
     make -j$(nproc) && \
     make install
 
-FROM bitnami/openresty:1.27.1-2-debian-12-r15
+# FROM bitnami/openresty:1.27.1-2-debian-12-r15
+FROM cyching/openresty-bitnami:1.27.1-2-debian-12-r15
 USER root
 COPY --from=builder /opt/bitnami/openresty/nginx/modules/ngx_http_cache_purge_module.so /opt/bitnami/openresty/nginx/modules/ngx_http_cache_purge_module.so
 COPY --from=builder /opt/bitnami/openresty/bin/openresty /opt/bitnami/openresty/bin/openresty
