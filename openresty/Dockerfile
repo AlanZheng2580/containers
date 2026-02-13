@@ -28,12 +28,15 @@ RUN cd /tmp && \
     # gpg --verify openresty-1.27.1.1.tar.gz.asc openresty-1.27.1.1.tar.gz && \
     tar xzf openresty-1.27.1.2.tar.gz && \
     git clone --branch 2.5.3 https://github.com/nginx-modules/ngx_cache_purge.git && \
-    git clone --branch v0.2.4 https://github.com/vozlt/nginx-module-vts.git
+    git clone --branch v0.2.4 https://github.com/vozlt/nginx-module-vts.git && \
+    git clone --branch v0.0.7 https://github.com/chobits/ngx_http_proxy_connect_module.git
 
 RUN cd /tmp/openresty-1.27.1.2 && \
     ./configure --prefix=/opt/bitnami/openresty --with-pcre-jit --with-http_realip_module --with-http_ssl_module --with-http_stub_status_module --with-http_v2_module --with-http_gzip_static_module --with-http_gunzip_module --with-http_auth_request_module --with-http_sub_module --with-mail_ssl_module --with-mail --with-compat --with-file-aio --with-http_addition_module --with-http_dav_module --with-http_flv_module --with-http_geoip_module=dynamic --with-http_image_filter_module=dynamic --with-http_mp4_module --with-http_random_index_module --with-http_secure_link_module --with-http_slice_module --with-http_xslt_module=dynamic --with-ipv6 --with-md5-asm --with-sha1-asm --with-stream_realip_module --with-threads --with-stream \
     --add-dynamic-module=../ngx_cache_purge \
-    --add-module=../nginx-module-vts && \
+    --add-module=../nginx-module-vts \
+    --add-module=../ngx_http_proxy_connect_module && \
+    patch -d build/nginx-1.27.1/ -p 1 < /tmp/ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch && \
     make -j$(nproc) && \
     make install
 

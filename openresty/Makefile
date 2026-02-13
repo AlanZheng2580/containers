@@ -17,6 +17,7 @@ test:
 	curl -Is localhost:8088/get | grep -i "X-Cache-Status: MISS"
 	curl -Is localhost:8088/get | grep -i "X-Cache-Status: HIT"
 	curl -s localhost:8088/status | grep -i "<title>nginx vhost traffic status monitor</title>"
+	curl -x localhost:8088 https://github.com -o /dev/null -w "%{http_code}" -s|grep 200
 
 up:
 	docker-compose up --build --remove-orphans
