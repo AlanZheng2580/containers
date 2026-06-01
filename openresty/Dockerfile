@@ -20,7 +20,9 @@ RUN apt-get update && \
         unzip \
         wget \
         zlib1g-dev \
-        git
+        git \
+        # CVE-2026-42010
+        libgnutls30
 
 RUN cd /tmp && \
     curl -O https://openresty.org/download/openresty-1.27.1.2.tar.gz && \
@@ -45,7 +47,13 @@ COPY --from=builder /opt/bitnami/openresty/bin/openresty /opt/bitnami/openresty/
 ## Enable module
 RUN echo "load_module modules/ngx_http_cache_purge_module.so;" | cat - /opt/bitnami/openresty/nginx/conf/nginx.conf > /tmp/nginx.conf && \
     cp /tmp/nginx.conf /opt/bitnami/openresty/nginx/conf/nginx.conf
-RUN apt-get update && apt-get install -y curl unzip git iputils-ping \
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    git \
+    iputils-ping \
+    # CVE-2026-42010
+    libgnutls30 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN opm get ledgetech/lua-resty-http
 ## Set the resolver.conf
